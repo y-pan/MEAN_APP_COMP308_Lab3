@@ -1,0 +1,63 @@
+
+
+<form action="signup" method="POST">
+    <div class="form-group">
+        <label>studentnumber:</label>
+        <input type="text" class="form-control" name="studentnumber" placeholder="studentnumber" value="300823057">
+    </div>
+    <div class="form-group">
+        <label>Password:</label>
+        <input id="password" type="password" class="form-control" name="password" placeholder="Enter your Password" value="Aa!123456">
+    </div>
+    <div class="form-group">
+        <label>First Name:</label>
+        <input type="text" class="form-control" name="firstname" placeholder="Enter your First Name" value="firstname">
+    </div>
+    <div class="form-group">
+        <label>Last Name:</label>
+        <input type="text" class="form-control" name="lastname" placeholder="Enter your Last Name" value="lastname">
+    </div>
+    
+    <div class="form-group">
+        <label>addresss:</label>
+        <input type="text" class="form-control" name="addresss" placeholder="Enter your addresss" value="123 road ave">
+    </div>
+    <div class="form-group">
+        <label>city</label>
+        <input type="text" class="form-control" name="city" placeholder="Enter your city" value="toronto">
+    </div>
+
+    <div class="form-group">
+        <label>phone:</label>
+        <input type="text" class="form-control" name="phone" placeholder="Enter your phone" value="6471231234">
+    </div>
+    
+    <div class="form-group">
+        <label>Email:</label>
+        <input type="text" class="form-control" name="email" placeholder="Enter your Email Address" value="myemail@gmail.com">
+    </div>
+    <div class="form-group">
+        <label>program</label>
+        <input type="text" class="form-control" name="program" placeholder="Enter your Favorite Program" value="software engineering">
+    </div>
+    
+    <div class="form-group">
+        <label>Confirm Password:</label>
+        <input id="passwordAgain" oninput="confirmPassword()" type="password" class="form-control" name="passwordAgain" placeholder="Enter your Password Again" value="Aa!123456">
+    </div>
+    <input id="btnSignUp" type="submit" value="Sign Up" class="btn btn-primary" disabled/>
+
+</form>
+
+<script>
+passInput = document.getElementById('password');
+passAgainInput = document.getElementById('passwordAgain');
+btnSignUp = document.getElementById('btnSignUp');
+function confirmPassword(){
+    if( !passInput.value.trim() || passInput.value != passAgainInput.value){
+        btnSignUp.disabled = true;
+    }else{
+        btnSignUp.disabled = false;
+    }
+}
+</script>
