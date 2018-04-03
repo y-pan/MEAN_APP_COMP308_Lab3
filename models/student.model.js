@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
 const lib = require('../lib/lib');
 
 const schema = mongoose.Schema;
@@ -13,9 +15,9 @@ const studentchema = new schema({
     password: {
         type: String,
         required: true,
-        minlength: 6 /* built in validator */
-        , maxlength: 18
-        , validate: [lib.validatePassword, 'Invalid password, make sure it is 6 ~ 18 length, including at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character(!@#$%^&*])'] /*custom validator. stronly is a function defined below */
+        // minlength: 6 /* built in validator */
+        // , maxlength: 18
+        // , validate: [lib.validatePassword, 'Invalid password, make sure it is 6 ~ 18 length, including at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character(!@#$%^&*])'] /*custom validator. stronly is a function defined below */
     },
     firstname: {
         type: String,
@@ -69,6 +71,15 @@ studentchema.statics.findById = (id) => {
     });
 }
 
+studentchema.statics.all = () => {
+    return new Promise((res, rej) => {
+        self.find({}, (err, data) => {
+            if (err) rej(err);
+            else res(data);
+        });
+    });
+}
+
 studentchema.statics.findByStudentnumberPassword = (studentnumber, password) => {
     return new Promise((res, rej) => {
         console.log(studentnumber, password)
@@ -84,16 +95,47 @@ studentchema.statics.findByStudentnumberPassword = (studentnumber, password) => 
                 }
             }
         })
-    })
+    });
 }
+
+studentchema.statics.findStudentByStudentnumber = (studentnumber) =>{
+    return new Promise((res, rej) => {
+        self.findOne({ "studentnumber": studentnumber}, (err, data) => {
+            if (err) {
+                 rej(err); 
+                }
+            else {
+                res(data); // let outside to determine behavior for data not found/data found
+            }
+        })
+    });
+}
+
 
 
 studentchema.statics.add = (student) => { // student is mongose instance(object). so add new student entity
     return new Promise((resolve, reject) => {
-        student.save((err, data) => {
-            if (err) {reject(err);}
-            else {resolve(data);}
-        })
+        if(!student.validatePassword()){
+            /** validatePassword() is instance method to validate password format, to enforce user to use strong password */
+            reject("Weak password. Make sure it is 6 ~ 18 length, including at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character(!@#$%^&*])")
+        }
+        let saltRounds = 10;
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(student.password, salt, function(err, hash) {
+                // Store hash in your password DB, to replace plain text.
+                student.password = hash; 
+                student.save((err, data) => {
+                    if (err) {reject(err);}
+                    else {
+                        // console.log("req.login ??? ...")
+                        // req.login(data._id);
+                        resolve(data);
+                    }
+                })
+            });
+        });
+
+        
     })
 }
 
@@ -101,6 +143,26 @@ studentchema.statics.add = (student) => { // student is mongose instance(object)
 studentchema.methods.validateSelf = function () {
     console.log("validateSelf: " + this.firstname + " from instance method");
 }
+
+// same with module.exports.comparePassword = function(xxx){}  studentchema.methods.comparePassword
+studentchema.methods.comparePassword = function(candidatePassword, hash, callback){
+    console.log("compare password: " + candidatePassword + " | "+hash)
+    bcrypt.compare(candidatePassword, hash, function(err, isMath){
+        if(err) throw err; /** would this break down server? */
+        callback(null, isMath);
+    });
+}
+
+studentchema.methods.validatePassword = function () {
+    console.log("validatePassword: " + this.password + " from instance method");
+    if(lib.validatePassword(this.password)){
+        return true; /** password format is qualified */
+    }else{
+        return false; /** format is not qualified, weak password */
+    }
+    
+}
+
 
 studentchema.methods.getFullName = function () {
     return this.firstname + " " + this.lastname

@@ -1,0 +1,59 @@
+<div class="container">
+
+        <form method="POST" (ngSubmit)="onSubmit()" *ngIf="toDisplaySignUp">
+            <div class="form-group">
+                <label for="studentnumberFr">studentnumber:</label>
+                <input id="studentnumberFr" [(ngModel)]="student.studentnumber" name="student.studentnumber" type="text" class="form-control"
+                    placeholder="Enter your Student Number">
+            </div>
+    
+            <div class="form-group">
+                <label for="firstname">First Name:</label>
+                <input id="firstname" [(ngModel)]="student.firstname" name="student.firstname" type="text" class="form-control" placeholder="Enter your First Name">
+            </div>
+            <div class="form-group">
+                <label for="lastnameFr">Last Name:</label>
+                <input id="lastnameFr" [(ngModel)]="student.lastname" name="student.lastname" type="text" class="form-control" placeholder="Enter your Last Name">
+            </div>
+    
+            <div class="form-group">
+                <label for="addresssFr">addresss:</label>
+                <input id="addresssFr" [(ngModel)]="student.addresss" name="student.addresss" type="text" class="form-control" placeholder="Enter your addresss">
+            </div>
+            <div class="form-group">
+                <label for="cityFr">city</label>
+                <input id="cityFr" [(ngModel)]="student.city" name="student.city" type="text" class="form-control" placeholder="Enter your city">
+            </div>
+    
+            <div class="form-group">
+                <label for="phoneFr">phone:</label>
+                <input id="phoneFr" [(ngModel)]="student.phone" name="student.phone" type="text" class="form-control" placeholder="Enter your phone">
+            </div>
+    
+            <div class="form-group">
+                <label for="emailFr">Email:</label>
+                <input id="emailFr" [(ngModel)]="student.email" name="student.email" type="text" class="form-control" placeholder="Enter your Email Address">
+            </div>
+            <div class="form-group">
+                <label for="programFr">program</label>
+                <input id="programFr" [(ngModel)]="student.program" name="student.program" type="text" class="form-control" placeholder="Enter your Favorite Program">
+            </div>
+            <div class="form-group">
+                <label for="passwordFr">Password:</label>
+                <input id="passwordFr" [(ngModel)]="student.password" name="student.password" type="password" class="form-control" placeholder="Enter your Password">
+            </div>
+            <div class="form-group">
+                <label for="passwordAgainFr">Confirm Password:</label>
+                <input id="passwordAgainFr" (input)="match2Passwords()" [(ngModel)]="student.passwordAgain" name="student.passwordAgain" type="password" class="form-control" placeholder="Enter your Password Again">
+            </div>
+            <input id="btnSignUp" type="submit" [disabled]="isSubmitDisabled" value="Sign Up" class="btn btn-primary"  />
+            <div class="err" style="color:red;" *ngIf="signUpErrs.length > 0">
+               Failed to submit due to {{signUpErrs.length}} error(s) in form:
+                <ul>
+                    <li *ngFor="let err of signUpErrs; let i = index">
+                        {{i+1}} - {{err}}
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
