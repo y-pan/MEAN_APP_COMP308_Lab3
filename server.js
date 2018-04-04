@@ -25,11 +25,13 @@ const mongoose = require('mongoose');
 
 const env = process.env.DEPLOY || "dev";
 const conf=require('./config/'+env+".json");  // conf could also be an object from process.env.conf from deployment server like heroku, instead of a physical file which could leads to security issue
-const port = conf.port || 8000;
+
+let port = conf.port || 8000;
 
 let dburl = "";
 if(process.env.heroku_deploy_mark){
-    dburl = process.env["dburl"]
+    dburl = process.env["dburl"];
+    port = process.env.port;
     console.log("use heroku env for dburl");
 }else{
     console.log("use cred.json ")
