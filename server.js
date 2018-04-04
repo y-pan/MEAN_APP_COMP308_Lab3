@@ -41,8 +41,10 @@ if(process.env.heroku_deploy_mark){
 mongoose.Promise = global.Promise;
 mongoose.connect(dburl).then(()=>{
     console.log('[OK] MongoDB is connected.')
+
 }).catch((err)=>{
     console.log('[err] MongoDB failed to connect:' + err)
+    
 });
 
 

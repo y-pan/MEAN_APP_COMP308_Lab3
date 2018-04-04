@@ -123,7 +123,7 @@ studentchema.statics.add = (student) => { // student is mongose instance(object)
         bcrypt.genSalt(saltRounds, function(err, salt) {
             bcrypt.hash(student.password, salt, function(err, hash) {
                 // Store hash in your password DB, to replace plain text.
-                student.password = hash; 
+                // student.password = hash; 
                 student.save((err, data) => {
                     if (err) {reject(err);}
                     else {
