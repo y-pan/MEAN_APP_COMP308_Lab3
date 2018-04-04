@@ -30,24 +30,6 @@ const add = (req, res) => {
     let email = req.body.email;
     let program = req.body.program || "";
 
-    // // validation
-    // req.checkBody('studentnumber','Student number is required').notEmpty();
-    // req.checkBody('password','Password is required').notEmpty();
-    // req.checkBody('firstname','Firstname is required').notEmpty();
-    // req.checkBody('lastname','Last name is required').notEmpty();
-    // req.checkBody('email','Email name is required').notEmpty();
-
-    // req.checkBody('email','Email name is required').isEmail();
-    // // req.checkBody('password2','Passwords do not match').equals(password);
-
-    // var errors = req.validationErrors();
-    // if(errors){
-    //     console.log("Yes errors");
-        
-    // }else{
-    //     console.log("No errors");
-    // }
-
     let studentJson = {
           studentnumber : studentnumber
         , password : password
@@ -61,16 +43,15 @@ const add = (req, res) => {
     };
 
     let student = new StudentModel(studentJson); // mongoose instance
-    // student.validateSelf(); // I think it is better to explicitly do here for validation of email, password, ...
     StudentModel.add(student)  // call for StudentModel static methods
         .then(user =>{
-            console.log("todo req.login: " + user["_id"]);
-            
-            req.login(user["_id"], function(err) {
-                if (err) { return next(err); }
-                // return res.redirect('/users/' + req.user.username);
-                res.json({data:user});
-              });
+            res.json({data:user});
+            // console.log("todo req.login: " + user["_id"]);
+            // req.login(user["_id"], function(err) {
+            //     if (err) { return next(err); }
+            //     // return res.redirect('/users/' + req.user.username);
+            //     res.json({data:user});
+            //   });
            
         })
         .catch(err =>{

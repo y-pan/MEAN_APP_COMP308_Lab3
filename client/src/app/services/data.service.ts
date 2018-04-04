@@ -24,8 +24,8 @@ export class DataService {
     let body = {	
       "course_id":courseId,
       "student_id":studentId}
-      console.log("in DataService: body=" )
-      console.log(body);
+      // console.log("in DataService: body=" )
+      // console.log(body);
     return this.http.post(url, JSON.stringify(body), headers).map((res:Response) => res.json());
     /** response is either: { "data": "OK"} or  { "err": "error in dropping course"}*/
   }
@@ -65,7 +65,7 @@ export class DataService {
   }
 
   login(studentnumber:string, password:string){
-    console.log("ng login: " + studentnumber + " | " + password);
+    // console.log("ng login: " + studentnumber + " | " + password);
     let url:string = this.getServerRoot(this.serverMode) + "api/student/login";
     let body = {"studentnumber": studentnumber, "password":password};
     return this.http.post(

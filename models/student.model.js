@@ -118,6 +118,7 @@ studentchema.statics.add = (student) => { // student is mongose instance(object)
         if(!student.validatePassword()){
             /** validatePassword() is instance method to validate password format, to enforce user to use strong password */
             reject("Weak password. Make sure it is 6 ~ 18 length, including at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character(!@#$%^&*])")
+            return;
         }
         let saltRounds = 10;
         bcrypt.genSalt(saltRounds, function(err, salt) {
@@ -129,7 +130,11 @@ studentchema.statics.add = (student) => { // student is mongose instance(object)
                     else {
                         // console.log("req.login ??? ...")
                         // req.login(data._id);
-                        resolve(data);
+                        if(!data){
+                            reject("Unknow Error!");
+                        }else{
+                            resolve(data);
+                        }
                     }
                 })
             });

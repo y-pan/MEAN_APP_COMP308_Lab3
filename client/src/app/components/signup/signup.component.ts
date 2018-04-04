@@ -100,10 +100,10 @@ export class SignupComponent implements OnInit {
     }
     this.dataService.signup(this.student).subscribe(data => {
       this.signUpErrs = [];
-      console.log("err...")
-      console.log(data["err"])
-      console.log("data...")
-      console.log(data["data"])
+      // console.log("err...")
+      // console.log(data["err"])
+      // console.log("data...")
+      // console.log(data["data"])
 
       if(data["err"]){
         let dbErr = data["err"];
@@ -124,20 +124,17 @@ export class SignupComponent implements OnInit {
           }
         }
       }else{
-        // console.log("data...")
-        // console.log(data["data"]);
+
         if(!data["data"]){
           this.signUpErrs.push('Unknow error occurred!')
+          return;
         }else{
           this.dataService.setStudent(data["data"]);
           this.messageService.filter(this.configService.MSG_USER_LOGGEDIN);
           this.messageService.filter(this.configService.MSG_SHOW_PROFILE); /** PROFILE is Home */
         }
-        
       }
-      
     })
-
   }
 }
 
