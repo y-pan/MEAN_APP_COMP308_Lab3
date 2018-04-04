@@ -4,6 +4,12 @@ import { Injectable } from '@angular/core';
 export class ConfigService {
 
 
+  MSG_ON_NAV_HOME: any = "onNavHome";
+  MSG_ON_NAV_LOGIN: any = "onNavLogin";
+  MSG_ON_NAV_SIGNUP: any = "onNavSignUp";
+  MSG_ON_NAV_MYCOURSES: any = "onNavMyCourses";
+  MSG_ON_NAV_ALLCOURSES: any = "onNavAllCourses";
+  
   MSG_SHOW_MYCOURSES: string = "showMyCourses"; /** show user's couress */
   MSG_SHOW_PROFILE: string = "showUserProfile"; /** show user profile like name, email,... */
   MSG_SHOW_LOGIN:string = "showLoginForm";

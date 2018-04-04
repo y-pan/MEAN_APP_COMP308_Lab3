@@ -45,12 +45,21 @@ coursechema.statics.all = (code) => {
 
 coursechema.statics.register = (course_id, student_id) => {
     return new Promise((resolve, reject) => {
+        // console.log("find course by id: " + course_id)
         self.findOne({ "_id": course_id }, (err, course) => {
             if (err) {reject(err);}
             else {
-                if(lib.arrayContains(course.students, student_id)){
+                if(!course){
+                    reject("Course not found");
+                }
+                // console.log("found course: " )
+                // console.log(course)
+                if(course.students && lib.arrayContains(course.students, student_id)){
                     resolve(course); // already registered, here just do nothing, though it is also acceptable to raise error cause you only need to register once
                 }else{
+                    if(!course.students){
+                        course.students = []; /** in case no such attribute initialize it as [] */
+                    }
                     course.students.push(student_id);
                     course.save((err, _course) =>{
                         if(err){ reject(err); }

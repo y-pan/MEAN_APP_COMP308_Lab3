@@ -2,19 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../../services/data.service';
 import { MessageService } from '../../services/message.service';
 import { ConfigService } from '../../services/config.service';
+import { ArrayContainsPipe } from '../../array-contains.pipe';
 
 @Component({
   selector: 'app-course',
   templateUrl: './course.component.html',
-  styleUrls: ['./course.component.css']
+  styleUrls: ['./course.component.css'],
+  // pipes:[ArrayContainsPipe]
 })
 export class CourseComponent implements OnInit {
   courses:Course[]
   course_debug:string = "course_debug"
-  stu_id = "5abea387729b162350860c15x"
+  studentId:string;
   displayCourses:boolean;
   displayMyCourse:boolean;
   isEnabled:boolean;
+  errorInCourse:string;
 
   constructor(
     private configService:ConfigService
@@ -47,6 +50,8 @@ export class CourseComponent implements OnInit {
     this.courses = [];
     // this.mock_course();
     this.getCourses(); /** get all courses */
+    
+    
   }
   
   private enable(enabled:boolean){ /** enabled when logged in, disabled when logged out */
@@ -60,29 +65,50 @@ export class CourseComponent implements OnInit {
     this.displayCourses = toDisplay;
     this.displayMyCourse = toDisplay;
     
-    if(!this.isEnabled){return;}
+    // if(!this.isEnabled){return;}
 
     if(toDisplay){
       this.getCourses();
-      this.getMyCourses();
+      // this.getMyCourses();
     }
   }
 
   private getCourses():void{ /** this is to get all courses from school, for all student to view */
+    let student = this.dataService.getStudent()
+    if(student){
+      this.studentId = student._id;
+      // console.log("get studentId!!!!!!!!!!!!!!: " + this.studentId)
+    }else{
+      this.studentId = "";
+    }
+
     this.dataService.getCourses().subscribe((dataJson:Response) =>{
       this.courses = [];
+      // console.log("course -> getCourse()")
       for (let i=0; i< dataJson["data"].length; i++){
         this.courses.push(dataJson["data"][i]);
       }
     });
   }
 
+  registerCourse(course:any){
+    if(confirm("Are you sure to register course: " +course.code + " - " + course.name + " (section " + course.section + ") ?")) {
+      let student = this.dataService.getStudent();
+      // console.log("student=" + student._id + " | course=" + courseId);
+      this.dataService.registerCourse(student._id, course._id).subscribe(data =>{
+        this.errorInCourse = data["err"];
+        if(!this.errorInCourse){
+          // this.display(true);
+          this.messageService.filter(this.configService.MSG_SHOW_COURSES);
+        }
+      })
+    }
+  }
   private getMyCourses(){
     // todo
-    console.log("TO IMPLEMENT course.component / getMyCourses()")
+    // console.log("TO IMPLEMENT course.component / getMyCourses()")
+    this.messageService.filter(this.configService.MSG_SHOW_MYCOURSES); /** inform mycourses component to do job */
   }
-
-
 
   private mock_course():void{
     this.courses.push(

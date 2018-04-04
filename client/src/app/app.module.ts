@@ -14,6 +14,7 @@ import {DataService} from './services/data.service';
 import {MessageService} from './services/message.service';
 import { NavComponent } from './components/nav/nav.component';
 import { MycoursesComponent } from './components/mycourses/mycourses.component';
+import { ArrayContainsPipe } from './array-contains.pipe';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { MycoursesComponent } from './components/mycourses/mycourses.component';
     SignupComponent,
     CourseComponent,
     NavComponent,
-    MycoursesComponent
+    MycoursesComponent,
+    ArrayContainsPipe
   ],
   imports: [
     BrowserModule,

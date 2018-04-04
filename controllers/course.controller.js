@@ -13,7 +13,7 @@ const create = (req, res) => {
     
     let course = new CourseModel(courseJson); // mongoose instance
     // course.validateSelf(); // I think it is better to explicitly do here for validation of email, password, ...
-    console.log(course)
+    // console.log(course)
     CourseModel.add(course)  // call for CourseModel static methods
         .then(data =>{
             if(!data){
@@ -33,8 +33,9 @@ const create = (req, res) => {
 const register = (req, res) =>{
     let student_id = req.body.student_id;
     let course_id = req.body.course_id;
+    // console.log("backen: student_id = " + student_id + " | course_id = " + course_id);
     CourseModel.register(course_id, student_id).then(data =>{
-        res.json({data:"OK"}); 
+        res.json({data:"OK"});  
     }).catch(err =>{
         res.json({err:"error in registering"});
     })

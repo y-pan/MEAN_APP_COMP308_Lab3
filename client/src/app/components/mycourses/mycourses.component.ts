@@ -52,10 +52,11 @@ export class MycoursesComponent implements OnInit {
     }
   }
 
-  drop(courseId:string){
-    console.log("to do drop course: " + courseId)
+  drop(course:any){
+    // console.log("to do drop course: " + courseId)
+    if(confirm("Are you sure to drop course: " +course.code + " - " + course.name + " (section " + course.section + ") ?")) {
     let student = this.dataService.getStudent();
-    this.dataService.dropCourse(student._id, courseId).subscribe(data =>{
+    this.dataService.dropCourse(student._id, course._id).subscribe(data =>{
       console.log(data)
       /** response is either: { "data": "OK"} or  { "err": "error in dropping course"}*/
       this.errMyCourses = data["err"];

@@ -1,6 +1,9 @@
 
 <div class="container" *ngIf="displayCourses">
-  <h3>All Courses:</h3>
+  <h3>All Courses</h3>
+  <div class="err" *ngIf="errorInCourse" style="color:red;">
+      {{errorInCourse}}
+    </div>
   <table class="table">
     <thead class="thead-dark">
       <tr>
@@ -10,7 +13,7 @@
           <th scope="col">section</th>
           <th scope="col">semester</th>
           <th scope="col">student registerd</th>
-          <th scope="col">Register/Drop</th>
+          <th scope="col">Register</th>
 
           <th hidden>_id</th>
       </tr>
@@ -25,8 +28,8 @@
         <td>{{course.students.length}}</td>
         <td>
           <!-- need global student info: if you are registerred, then you can see Drop button, otherwise you see Register button -->
-          <button>Register</button>
-          <!-- <button >Drop</button> -->
+          <button (click)="registerCourse(course)" *ngIf="!(course.students | arrayContains:studentId); ">Register</button>
+          <!-- <ng-template #registered>Registerred</ng-template> -->
         </td>
         <td hidden>{{course._id}}</td>
       </tr>

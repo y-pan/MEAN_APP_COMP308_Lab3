@@ -94,18 +94,27 @@ export class SignupComponent implements OnInit {
     }
   }
   onSubmit(){
+    if(this.student.password != this.student.passwordAgain){
+      this.signUpErrs = ["Passwords didn't match!"];
+      return;
+    }
     this.dataService.signup(this.student).subscribe(data => {
       this.signUpErrs = [];
       console.log("err...")
       console.log(data["err"])
       console.log("data...")
-      
       console.log(data["data"])
 
       if(data["err"]){
         let dbErr = data["err"];
         if(dbErr["errmsg"]){
           this.signUpErrs.push(dbErr["errmsg"]);
+        }else{
+          if(dbErr instanceof Object){
+
+          }else{
+            this.signUpErrs.push(dbErr)
+          }
         }
 
         let errors = data["err"]["errors"]; /** validation errors */
