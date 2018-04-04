@@ -63,7 +63,7 @@ export class SignupComponent implements OnInit {
       program:""
     }
 
-    this.mock_user();
+    // this.mock_user();
   }
   display(toDisplay:boolean){
     this.toDisplaySignUp = toDisplay;

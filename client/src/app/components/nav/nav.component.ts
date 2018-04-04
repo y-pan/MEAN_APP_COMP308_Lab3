@@ -57,7 +57,7 @@ export class NavComponent implements OnInit {
   
   private checkIfLogin(){
     /** here might need to check with server ??? */
-    this.logout();// log use out
+    // this.logout();// log use out
     // this.login();  // log user in
     
   }

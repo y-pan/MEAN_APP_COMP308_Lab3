@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
     }
     this.loginErr = "";
 
-    this.mock_cred();
+    // this.mock_cred();
   }
   display(toDisplay:boolean){
     this.toDisplayLogin = toDisplay;
