@@ -22,10 +22,10 @@ export class MycoursesComponent implements OnInit {
     this.messageService.listen().subscribe((msg: any) => {
       switch (msg) {
         case this.configService.MSG_SHOW_MYCOURSES:
-          this.display(true); 
+          this.display(true);
           break;
         default:
-          this.display(false); 
+          this.display(false);
           break;
       }
     })
@@ -45,24 +45,25 @@ export class MycoursesComponent implements OnInit {
           this.errMyCourses = data["err"];
           this.myCourses = data["data"];
         });
-      }else{
+      } else {
         this.errMyCourses = "No student";
         this.myCourses = null;
       }
     }
   }
 
-  drop(course:any){
+  drop(course: any) {
     // console.log("to do drop course: " + courseId)
-    if(confirm("Are you sure to drop course: " +course.code + " - " + course.name + " (section " + course.section + ") ?")) {
-    let student = this.dataService.getStudent();
-    this.dataService.dropCourse(student._id, course._id).subscribe(data =>{
-      console.log(data)
-      /** response is either: { "data": "OK"} or  { "err": "error in dropping course"}*/
-      this.errMyCourses = data["err"];
-      if(!this.errMyCourses){
-        this.display(true);
-      }
-    });
+    if (confirm("Are you sure to drop course: " + course.code + " - " + course.name + " (section " + course.section + ") ?")) {
+      let student = this.dataService.getStudent();
+      this.dataService.dropCourse(student._id, course._id).subscribe(data => {
+        console.log(data)
+        /** response is either: { "data": "OK"} or  { "err": "error in dropping course"}*/
+        this.errMyCourses = data["err"];
+        if (!this.errMyCourses) {
+          this.display(true);
+        }
+      });
+    }
   }
 }
