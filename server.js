@@ -31,7 +31,7 @@ let port = conf.port || 8000;
 let dburl = "";
 if(process.env.heroku_deploy_mark){
     dburl = process.env["dburl"];
-    port = process.env.port;
+    port = process.env.PORT;
     console.log("use heroku env for dburl");
 }else{
     console.log("use cred.json ")
