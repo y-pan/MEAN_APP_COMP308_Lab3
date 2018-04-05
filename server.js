@@ -7,10 +7,14 @@ const session = require('express-session');
 const expressValidator = require('express-validator');
 
 const flash = require('connect-flash');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
+
 const cookieParser = require('cookie-parser');
 const path = require('path')
+
+const studentModel = require('./models/student.model');
 
 // ********************************* todo: passport!!! ****************************************************************************/
 
@@ -23,11 +27,13 @@ const mongoose = require('mongoose');
     
 // }
 
+
+
 const env = process.env.DEPLOY || "dev";
 const conf=require('./config/'+env+".json");  // conf could also be an object from process.env.conf from deployment server like heroku, instead of a physical file which could leads to security issue
 
 let port = conf.port || 8000;
-
+console.log("port is: " + port);
 let dburl = "";
 if(process.env.heroku_deploy_mark){
     dburl = process.env["dburl"];
@@ -38,7 +44,7 @@ if(process.env.heroku_deploy_mark){
     const cred = require('./config/cred.json');
     dburl = cred.dburl;
 }
- 
+const app = express(); 
 
 mongoose.Promise = global.Promise;
 mongoose.connect(dburl).then(()=>{
@@ -50,7 +56,7 @@ mongoose.connect(dburl).then(()=>{
 });
 
 
-const app = express();
+
 app.set('view engine', 'ejs');
 
 
@@ -58,29 +64,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 // Express Validator, after bodyparser
 app.use(expressValidator());
-// app.use(expressValidator({
-//     errorFormatter:function(param, msg, value){
-//         let namespace = param.split('.')
-//         , root = namespace.shift()
-//         , formParam = root;
-//         while(namespace.length){
-//             formParam += '[' + namespace.shift() + ']';
-//         }
-//         return {
-//             param: formParam,
-//             msg: msg,
-//             value: value
-//         };
-//     }
-// }));
 
 app.use(cookieParser());
+// express session
+app.use(session({ secret:'secret4lab3', saveUninitialized: false, resave:false }));
 
 // static 
 app.use(express.static(path.join(__dirname, 'dist')));
-
-// express session
-app.use(session({ secret:'secret4lab3', saveUninitialized: true, resave:true }));
 
 // passport init
 app.use(passport.initialize());
@@ -98,12 +88,13 @@ app.use(function(req, res, next){
     next();
 });
 
+
+
 // set headers so that client have accesses to api
-//    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -117,26 +108,19 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", (req, res)=>{
-    // res.json({url: "/api/student, /api/course"});
-    // res.sendFile('/client/dist/index.html')
-    var _path = path.join(__dirname + 'index.html');
-    console.log(_path)
-    res.sendFile(_path)
-    
-    // res.sendFile(path.join(__dirname + '/dist/index.html'))
+    if(process.env.heroku_deploy_mark){
+        var _path = path.join(__dirname + 'index.html'); /** this is to use static page, which is Anguar 4 build */
+        // console.log(_path)
+        res.sendFile(_path)
+    }else{
+        res.json({"root":"local mode"})
+    }
     
 })
 
 app.use("/api/student", studentRouter); /** studentRouter */
 app.use("/api/course", courseRouter); /** courseRouter */
 
-
-/*****************************************************  use passport ********************************************************* */
-// app.use(session({
-//     secret:conf.secret
-//     ,resave:true
-//     ,saveUninitialized:true
-// }));
 
 
 app.listen(port, ()=>{

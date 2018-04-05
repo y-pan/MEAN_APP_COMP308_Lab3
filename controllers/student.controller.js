@@ -1,6 +1,5 @@
 /** do db work here */
 const StudentModel = require('../models/student.model');
-const passport = require('passport');
 
 const lib = require('../lib/lib');
 
@@ -87,18 +86,3 @@ module.exports = {
     , "add":add
     , "all":all
 }
-
-
-passport.serializeUser(function(_id, done){
-    console.log("passport.serializeUser...")
-    done(null, _id);
-});
-passport.deserializeUser(function(_id, done){
-    console.log("passport.deserializeUser...")
-    
-    studentModel.findById(_id).then(user => {
-        done(null, user);
-    }).catch(err => {
-        done(err, null);
-    })
-});

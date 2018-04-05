@@ -42,6 +42,9 @@ export class LoginComponent implements OnInit {
     //   console.log("looks like login works...")
     //   console.log(data['data']['_id'])
     // });
+    // console.log(localStorage);// to save jwttoken
+    this.checkIfAuthenticated();
+
     this.display(true);
     this.credential = {
       studentnumber:""
@@ -61,6 +64,19 @@ export class LoginComponent implements OnInit {
       , password:"Aa!123456"
     }
   }
+  checkIfAuthenticated(){
+    // this.dataService.getCourses().subscribe(data => {
+
+    //   if(data['data']){
+    //     console.log("yes we get data...")
+    //     // console.log(data['data'])
+    //   }else{
+    //     console.log("err" + data["err"]);
+    //   }
+    // }
+  // )
+
+  }
   onSubmit(){
     // console.log(this.credential);
     this.dataService.login(this.credential.studentnumber, this.credential.password).subscribe(data =>{
@@ -68,11 +84,15 @@ export class LoginComponent implements OnInit {
       // console.log(data);
       this.loginErr = data["err"];
       this.dataService.setStudent(data["data"]);
-      
+      console.log("loginErr=" +this.loginErr )
       if(data["data"]){
         this.messageService.filter(this.configService.MSG_USER_LOGGEDIN);
         this.messageService.filter(this.configService.MSG_SHOW_PROFILE);
       }
+    },err => {
+      console.log("err afte sub")
+      console.log(err)
+      this.loginErr = err['statusText'] ? err['statusText'] + ": Invalid credentials" : "Invalid credentials";
     })
   }
 }

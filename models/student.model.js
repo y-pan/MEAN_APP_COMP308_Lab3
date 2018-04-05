@@ -166,10 +166,19 @@ studentchema.methods.validateSelf = function () {
 studentchema.methods.comparePassword = function(candidatePassword, hash, callback){
     console.log("compare password: " + candidatePassword + " | "+hash)
     bcrypt.compare(candidatePassword, hash, function(err, isMath){
+        //if(err) throw err; /** would this break down server? */
+        //callback(null, isMath);
+        callback(err, isMath);
+    });
+}
+studentchema.methods.verifyPassword = function(candidatePassword){
+    console.log("verifyPassword: " + candidatePassword + " | pass in db: " + this.password);
+    bcrypt.compare(candidatePassword, this.password, function(err, isMath){
         if(err) throw err; /** would this break down server? */
         callback(null, isMath);
     });
 }
+
 
 studentchema.methods.validatePassword = function () {
     console.log("validatePassword: " + this.password + " from instance method");

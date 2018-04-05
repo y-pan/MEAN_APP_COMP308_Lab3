@@ -1,6 +1,8 @@
 /** get request url, point to controller where db work is done */
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
+
 const studentModel = require('../models/student.model');
 const studentController = require('../controllers/student.controller')
 
@@ -9,85 +11,74 @@ const express = require('express');
 // var ejs = require('ejs');
 const router = express.Router();
 
+
+
+passport.use(new LocalStrategy({usernameField: 'studentnumber'},
+  function(studentnumber, password, done) {
+    console.log("passport.use(new LocalStrateg(...)) ...")
+      studentModel.findOne({ studentnumber: studentnumber }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect studentnumber.' });
+      }
+      user.comparePassword(password, user.password, (err, isMatch) =>{
+        if(err){
+          return done(err)
+        }else{
+          if(isMatch){
+            console.log(" yes matched... return user obj")
+            // console.log(user);
+            return done(null, user);
+          }else{
+            console.log(" not matched... return false")
+
+            return done(null, false);
+          }
+        }
+      })
+      // if (!user.verifyPassword(password)) {
+      //   return done(null, false, { message: 'Incorrect password.' });
+      // }
+      // return done(null, user);
+    });
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function(id, done) {
+  studentModel.findById(id, function(err, user) {
+      done(err, user);
+  });
+});
+
+
+
+
+
+
 // register/signup, so user can login
 router.route('/signup').post(studentController.add);
+// router.route('/login').post(studentController.login); /** ok without passport */
+router.route('/all').get(studentController.all); /** for admin user */
 
 
-// var isValidPassword = function(user, password){
-//     return bCrypt.compareSync(password, user.password);
-//   }
-// passport/login.js
-// passport.use('login', new LocalStrategy({
-//     passReqToCallback : true
-//   },
-//   function(req, studentnumber, password, done) { 
-//     // check in mongo if a user with username exists or not
-//     studentModel.findOne({ 'studentnumber' :  studentnumber }, 
-//       function(err, user) {
-//         // In case of any error, return using the done method
-//         if (err)
-//           return done(err);
-//         // Username does not exist, log error & redirect back
-//         if (!user){
-//           console.log('User Not Found with username '+username);
-//           return done(null, false, 
-//                 req.flash('message', 'User Not found.'));                 
-//         }
-//         // User exists but wrong password, log the error 
-//         console.log("---validate password ...")
-//         // if (!isValidPassword(user, password)){
-//         //   console.log('Invalid Password');
-//         //   return done(null, false, 
-//         //       req.flash('message', 'Invalid Password'));
-//         // }
-//         // User and password both match, return user from 
-//         // done method which will be treated like success
-//         return done(null, user);
-//       }
-//     );
-// }));
-
-passport.use('login', new LocalStrategy(
-    function(studentnumber, password, done) {
-        studentModel.findStudentByStudentnumber(studentnumber).then(user => {
-            console.log("passport.use locals...")
-            if (!user) { return done(null, false, {message: "Unknow user"}); /*user not found*/}
-
-            user.comparePassword(password, user.password, function(err, isMatch){
-                if(err){return done(err);}
-                if(isMatch){
-                    return done(null, user);
-                }else{
-                    return done(null, false, {message:'Invalid password'});
-                }
-            })
-        }).catch(err => {
-            return done(err);
-        })
-        
-        // , function (err, user) {
-        //     if (err) { return done(err); }
-        //     if (!user) { return done(null, false); }
-        //     if (!user.verifyPassword(password)) { return done(null, false); }
-        //     return done(null, user);
-        //   });
+router.post('/login',
+//{successRedirect:"/", failureRedirect:'/', failureFlash:true}
+  passport.authenticate('local'),
+  function(req, res) {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    console.log("Authenticated user...")
+    // console.log(req.user)
+    if(req.user){
+      res.json({data:req.user}); /** Using angular 4, only 1 page,  */
+    }else{
+      res.json({err:"Invalid credential!"})
     }
-    ));
 
-router.route('/login').post(studentController.login); /** ok */
-// console.log(passport.authenticate('local'))
-// {successRedirect:"/", failureRedirect:"/student/login", failureFlash:false}
-// router.post("/login", passport.authenticate('local', 
-//     {successRedirect:"/student/all", failureRedirect:"/student/all", failureFlash:true}), 
-//     (req, res)=>{
-//     console.log("passport in login??")
-// });
-
-router.route('/login').post(
-        passport.authenticate('local', {successRedirect:"/", failureRedirect:"/student/login", failureFlash:true})
-        , studentController.login); /** ok */
-
-router.route('/all').get(studentController.all);
-
+  });
 
 module.exports = router; 

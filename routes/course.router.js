@@ -1,6 +1,7 @@
 /** get request url, point to controller where db work is done */
 
 const courseController = require('../controllers/course.controller')
+let passport = require('passport')
 
 const express = require('express');
 // var ejs = require('ejs');
@@ -21,6 +22,7 @@ router.route('/list')
 
 router.route('/mylist/:student_id') 
         .get(courseController.mylist) /** ok */
+
 
 
 

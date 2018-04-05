@@ -14,7 +14,7 @@ export class DataService {
     if(serverMode == 0){
       return "https://coursereg.herokuapp.com/";
     }else{
-      return "http://localhost:8080/";
+      return "http://localhost:8081/";
     }
   }
   registerCourse(studentId:string, courseId:string):any {
