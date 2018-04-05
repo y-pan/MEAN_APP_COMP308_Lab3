@@ -5,6 +5,7 @@ const passport = require('passport');
 const lib = require('../lib/lib');
 
 const login = (req, res) => {
+    /** this method assumes that password in db doesn't get encrypted, just plain text. */
     console.log("login in studentcontrollerjs")
     StudentModel.findByStudentnumberPassword(req.body.studentnumber, req.body.password)
         .then((student)=>{
@@ -16,6 +17,8 @@ const login = (req, res) => {
 }
 
 const loginEncrypted = (req, res) => {
+    /** This method assumes that password in db was encrypted during signup, 
+     * incomming plain password need to compare with hashed password using bcrypt */
     console.log("@@@@@@@@@login in studentcontrollerjs, encrypted")
     StudentModel.findByStudentnumberPasswordEncrypted(req.body.studentnumber, req.body.password)
         .then((student)=>{

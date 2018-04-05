@@ -36,7 +36,7 @@ const coursechema = new schema({
 
 coursechema.statics.all = (code) => {
     return new Promise((res, rej) => {
-        self.find({}, (err, data) => {
+        self.find({}, null, {sort: {'code': 1}}, (err, data) => {
             if (err) rej(err);
             else res(data);
         });
@@ -102,7 +102,7 @@ coursechema.statics.drop = (course_id, student_id) => {
 
 coursechema.statics.findCoursesHavingStudentId = (student_id) => {
     return new Promise((res, rej) => {
-        self.find({ students: student_id }, (err, data) => {
+        self.find({ students: student_id }, null, {sort: {'code': 1}}, (err, data) => {
                    /** { array: element}  */
             if (err) rej(err);
             else res(data);
