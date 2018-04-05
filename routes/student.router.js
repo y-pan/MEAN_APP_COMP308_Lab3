@@ -61,11 +61,11 @@ passport.deserializeUser(function(id, done) {
 
 // register/signup, so user can login
 router.route('/signup').post(studentController.add);
-// router.route('/login').post(studentController.login); /** ok without passport */
+router.route('/login').post(studentController.login); /** ok without passport */
 router.route('/all').get(studentController.all); /** for admin user */
 
 
-router.post('/login',
+router.post('/login_notInUse',
 //{successRedirect:"/", failureRedirect:'/', failureFlash:true}
   passport.authenticate('local'),
   function(req, res) {
