@@ -79,19 +79,32 @@ studentchema.statics.all = () => {
         });
     });
 }
-
-studentchema.statics.findByStudentnumberPassword = (studentnumber, password) => {
+/**testing method for bcrypt. incomming password is always plain text, with/without encrpyted
+ * just the if pass is encrpyted in db, the you have to match using bcrypt
+ */
+studentchema.statics.findByStudentnumberPasswordEncrypted= (studentnumber, password) => {
     return new Promise((res, rej) => {
         console.log(studentnumber, password)
-        self.findOne({ "studentnumber": studentnumber, "password": password }, (err, data) => {
+        self.findOne({ "studentnumber": studentnumber}, (err, data) => {
             if (err) {
                  rej(err); 
                 }
             else {
                 if (!data) { 
-                    rej("Invalid student number or password"); }
+                    rej("No such student number"); }
                 else {
-                    res(data);
+                    /** compare incomming plain pass & encrypted pass in db */
+                    
+                    bcrypt.compare(password, data.password, function(err, isMath){
+                        if(err) { rej(err);return; }//throw err; /** throw will break down server? */
+                        console.log("isMath:"+isMath)
+                        console.log(isMath)
+                        if(isMath){
+                            res(data);
+                        }else{
+                            rej("Wrong password!");
+                        }
+                    });
                 }
             }
         })
@@ -124,7 +137,7 @@ studentchema.statics.add = (student) => { // student is mongose instance(object)
         bcrypt.genSalt(saltRounds, function(err, salt) {
             bcrypt.hash(student.password, salt, function(err, hash) {
                 // Store hash in your password DB, to replace plain text.
-                // student.password = hash; 
+                student.password = hash; 
                 student.save((err, data) => {
                     if (err) {reject(err);}
                     else {

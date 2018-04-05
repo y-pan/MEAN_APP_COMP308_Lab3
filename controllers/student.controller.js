@@ -15,6 +15,17 @@ const login = (req, res) => {
         })
 }
 
+const loginEncrypted = (req, res) => {
+    console.log("@@@@@@@@@login in studentcontrollerjs, encrypted")
+    StudentModel.findByStudentnumberPasswordEncrypted(req.body.studentnumber, req.body.password)
+        .then((student)=>{
+            res.json({data:student});
+        })
+        .catch((err)=>{
+            res.json({err:err});
+        })
+}
+
 
 const add = (req, res) => {
     /** register/add student account */
@@ -68,7 +79,8 @@ const all = (req, res) =>{
 }
 
 module.exports = {
-     "login":login
+     "login":loginEncrypted
+
     , "add":add
     , "all":all
 }

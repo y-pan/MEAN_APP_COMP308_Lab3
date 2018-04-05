@@ -99,9 +99,12 @@ app.use(function(req, res, next){
 });
 
 // set headers so that client have accesses to api
+//    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     // Request headers you wish to allow
