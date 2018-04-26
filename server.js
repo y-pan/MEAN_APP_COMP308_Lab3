@@ -32,7 +32,7 @@ const mongoose = require('mongoose');
 const env = process.env.DEPLOY || "dev";
 const conf=require('./config/'+env+".json");  // conf could also be an object from process.env.conf from deployment server like heroku, instead of a physical file which could leads to security issue
 
-let port = conf.port || 8000;
+let port = conf.port || 8081;
 console.log("port is: " + port);
 let dburl = "";
 if(process.env.heroku_deploy_mark){
@@ -42,7 +42,8 @@ if(process.env.heroku_deploy_mark){
 }else{
     console.log("use cred.json ")
     const cred = require('./config/cred.json');
-    dburl = cred.dburl;
+    /** if running local in school, cannot use mlab, have to use local mongodb */
+    dburl = cred.dburl2;
 }
 const app = express(); 
 

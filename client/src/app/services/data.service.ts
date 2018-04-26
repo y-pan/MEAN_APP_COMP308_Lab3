@@ -8,7 +8,7 @@ import {ConfigService} from './config.service'
 @Injectable()
 export class DataService {
 
-  serverMode:number = 0; /** 0-heroku, 1-localhost */
+  serverMode:number = 1; /** 0-heroku, 1-localhost */
   
   getServerRoot(serverMode:number){
     if(serverMode == 0){
